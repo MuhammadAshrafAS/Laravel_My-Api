@@ -19,18 +19,3 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 }
-
-public function up(): void
-{
-    Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        // Foreign Key ke tabel categories
-        $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-        
-        $table->string('name');
-        $table->integer('price');
-        $table->integer('stock');
-        $table->text('description')->nullable();
-        $table->timestamps();
-    });
-}

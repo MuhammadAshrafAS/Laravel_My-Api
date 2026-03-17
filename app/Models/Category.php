@@ -18,3 +18,4 @@ public function products()
     // Satu kategori punya banyak produk
     return $this->hasMany(Product::class);
 }
+

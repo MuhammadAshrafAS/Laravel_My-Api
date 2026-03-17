@@ -9,13 +9,22 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    public function index()
-    {
-        // 'with' digunakan untuk memuat data kategori sekaligus (Eager Loading)
-        $products = Product::with('category')->latest()->get();
+    public function index(Request $request)
+{
+    // Mulai query
+    $query = Product::with('category');
 
-        return response()->json(['data' => $products], 200);
+    // Jika ada pencarian nama (?name=sepatu)
+    if ($request->has('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
     }
+
+    // Pagination (5 data per halaman)
+    $products = $query->latest()->paginate(5);
+
+    return response()->json($products, 200);
+}
+
 
     public function store(Request $request)
     {

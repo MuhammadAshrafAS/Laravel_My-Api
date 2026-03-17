@@ -19,18 +19,28 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'category_id' => 'required|exists:categories,id', // Pastikan ID kategori ada
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric',
-        ]);
+        // ... Validasi sebelumnya ...
+     $validator = Validator::make($request->all(), [
+        'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Tambahan validasi gambar
+        // ... validasi lain ...
+    ]);
 
-        if ($validator->fails()) return response()->json(['errors' => $validator->errors()], 422);
+    // Proses Upload
+    $image = $request->file('image');
+    $image->storeAs('public/products', $image->hashName());
 
-        $product = Product::create($request->all());
+    // Simpan ke DB
+    $product = Product::create([
+        'image' => $image->hashName(), // Simpan nama filenya saja
+        'category_id' => $request->category_id,
+        'name' => $request->name,
+        'price' => $request->price,
+        'stock' => $request->stock,
+        'description' => $request->description
+    ]);
 
-        return response()->json(['message' => 'Produk tersimpan', 'data' => $product], 201);
+    return response()->json(['data' => $product], 201);
+
     }
     
     // ... (Implementasikan Show, Update, Destroy mirip dengan CategoryController)

@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
-    
+
     // Kolom yang boleh diisi user
     protected $fillable = ['name'];
-}
 
-public function products()
-{
-    // Satu kategori punya banyak produk
-    return $this->hasMany(Product::class);
+    // Relasi: Satu kategori punya banyak produk
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
-
